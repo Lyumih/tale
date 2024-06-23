@@ -1,0 +1,19 @@
+$tale_battle $mol_page
+	title \Битва
+	body /
+		<= Hero_card $tale_ui_card sub /
+			<= Info $mol_text text \
+				\Герой: Абрахам
+				\Атака: 2
+				\Физ. урон: ур. 1. 1 / 10
+				\Здоровье: 10 / 10
+		<= Enemy_card $tale_ui_card sub /
+			<= Enemy_info $mol_text text \
+				\Враг: Крыса
+				\Атака: 1
+				\Здоровье: 4
+		<= Actions_panel $mol_row sub /
+			<= Attack $mol_button_major
+				title \Атака
+			<= Toggle_battle $mol_button_major
+				title \Поиск врага \Сбежать
