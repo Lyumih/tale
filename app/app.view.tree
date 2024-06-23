@@ -9,4 +9,4 @@ $tale_app $mol_book2_catalog
 		<= Crus_status $hyoo_crus_status realm <= realm
 	spreads *
 		battle <= Battle $tale_battle
-			realm <= realm
+			- realm <= realm
