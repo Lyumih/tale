@@ -76,7 +76,7 @@ namespace $.$$ {
 			const min_chance = this.hero().exp[ stat ] <= 99 ? 100 - this.hero().exp[ stat ] : 1 // 1+
 			if( chance <= min_chance ) {
 				this.hero( { ...this.hero(), exp: { ...this.hero().exp, [ stat ]: this.hero().exp[ stat ] + 1 } } )
-				this.add_log( `🌟${ this.hero().name } повысил ${ stat } с шансом ${ chance }(${ min_chance })` )
+				this.add_log( `🌟${ this.hero().name } повысил ${ stat } с шансом ${ chance }(${ min_chance }%)` )
 			}
 			// this.add_log( `test ${ this.hero().name } повысил ${ stat } с шансом ${ chance }(${ min_chance }) ${JSON.stringify( this.hero() )}` )
 		}
