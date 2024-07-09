@@ -9589,9 +9589,14 @@ var $;
 			(obj.click) = (next) => ((this?.hero_attack(next)));
 			return obj;
 		}
+		next_enemy(next){
+			if(next !== undefined) return next;
+			return null;
+		}
 		Toggle_battle(){
 			const obj = new this.$.$mol_button_major();
 			(obj.title) = () => ("Поиск врага \\Сбежать");
+			(obj.click) = (next) => ((this?.next_enemy(next)));
 			return obj;
 		}
 		Actions_panel(){
@@ -9619,9 +9624,20 @@ var $;
 	($mol_mem(($.$tale_battle.prototype), "Enemy_card"));
 	($mol_mem(($.$tale_battle.prototype), "hero_attack"));
 	($mol_mem(($.$tale_battle.prototype), "Attack"));
+	($mol_mem(($.$tale_battle.prototype), "next_enemy"));
 	($mol_mem(($.$tale_battle.prototype), "Toggle_battle"));
 	($mol_mem(($.$tale_battle.prototype), "Actions_panel"));
 
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_array_lottery(list) {
+        return list[Math.floor(Math.random() * list.length)];
+    }
+    $.$mol_array_lottery = $mol_array_lottery;
+})($ || ($ = {}));
 
 ;
 "use strict";
@@ -9633,6 +9649,31 @@ var $;
     var $$;
     (function ($$) {
         class $tale_battle extends $.$tale_battle {
+            enemies() {
+                return [
+                    {
+                        icon: '🦀',
+                        name: 'Краб',
+                        hp: 5,
+                        dmg: 1,
+                        speed: 5,
+                    },
+                    {
+                        icon: '🦇',
+                        name: 'Летучая мышь',
+                        hp: 3,
+                        dmg: 2,
+                        speed: 3,
+                    },
+                    {
+                        icon: '🐝',
+                        name: 'Пчела',
+                        hp: 1,
+                        dmg: 3,
+                        speed: 10,
+                    },
+                ];
+            }
             hero(next) {
                 console.log('hero', next);
                 return next ?? {
@@ -9644,29 +9685,40 @@ var $;
                 };
             }
             enemy(next) {
-                return next ?? {
-                    icon: '🦀',
-                    name: 'Краб',
-                    hp: 4,
-                    dmg: 1,
-                    speed: 5,
-                };
+                return next ?? this.enemies()[0];
             }
             hero_attack() {
-                console.log('hero_attack');
-                this.hero({ ...this.hero(), hp: this.hero().hp -= this.enemy().dmg });
+                this.hero({ ...this.hero(), hp: this.hero().hp - this.enemy().dmg });
+                this.turn_enemy();
                 console.log('hero_attack', this.hero());
+                this.logic();
+            }
+            turn_enemy() {
+                this.enemy_attack();
+            }
+            logic() {
+                if (this.enemy().hp <= 0) {
+                    this.next_enemy();
+                }
+            }
+            enemy_attack() {
+                this.enemy({ ...this.enemy(), hp: this.enemy().hp - this.hero().dmg });
+                console.log('hero_attack', this.enemy());
             }
             hero_info() {
                 console.log('hero info', this.hero());
-                return this.hero().hp + this.common_info(this.hero());
+                return this.common_info(this.hero());
+            }
+            next_enemy() {
+                console.log('next_enemy');
+                return this.enemy($mol_array_lottery(this.enemies()));
             }
             enemy_info() {
                 return this.common_info(this.enemy());
             }
             common_info(unit) {
                 console.log('common info');
-                return `${unit.icon}${unit.name}⚔️ ${unit.hp}❤️ ${unit.dmg}👟 ${unit.speed}`;
+                return `${unit.icon}${unit.name}\n ❤️${unit.hp} ⚔️${unit.dmg} 👟${unit.speed}`;
             }
         }
         __decorate([
@@ -9678,6 +9730,9 @@ var $;
         __decorate([
             $mol_action
         ], $tale_battle.prototype, "hero_attack", null);
+        __decorate([
+            $mol_action
+        ], $tale_battle.prototype, "enemy_attack", null);
         $$.$tale_battle = $tale_battle;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));

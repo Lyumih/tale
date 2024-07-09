@@ -207,7 +207,9 @@
     "$tale_ui_card",
     "$tale_ui",
     "$mol_button_major",
-    "$mol_row"
+    "$mol_row",
+    "$mol_array_lottery",
+    "$mol_array"
   ],
   "dependencies": {
     "jsdom": "*",
