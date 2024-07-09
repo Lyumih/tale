@@ -12,7 +12,7 @@ namespace $.$$ {
 				},
 				{
 					icon: '🦇',
-					name: 'Летучая мышь', 
+					name: 'Летучая мышь',
 					hp: 3,
 					dmg: 2,
 					speed: 3,
@@ -28,7 +28,7 @@ namespace $.$$ {
 					icon: '🐲',
 					name: 'Дракон',
 					hp: 100,
-					dmg: 9,
+					dmg: 4,
 					speed: 2,
 				},
 			]
@@ -45,6 +45,7 @@ namespace $.$$ {
 				speed: 3,
 				exp: {
 					attack: 0,
+					health: 0,
 				},
 			}
 		}
@@ -57,27 +58,42 @@ namespace $.$$ {
 		@$mol_action
 		hero_attack() {
 			this.enemy_attack()
-			this.hero( { ...this.hero(), hp: this.hero().hp - this.enemy().dmg, exp: { ...this.hero().exp, attack: this.hero().exp.attack + 1 } } )
+			this.hero( { ...this.hero(), hp: this.hero().hp - this.enemy().dmg } )
+			this.exp_up( 'attack' )
 			console.log( 'hero_attack', this.hero() )
 			this.logic()
 		}
 
 		calc_dmg( unit: any ): number {
 			console.log( 'calc_dmg', unit )
-			return unit.dmg + (unit.exp?.attack || 0)
+			return unit.dmg + ( unit.exp?.attack || 0 )
+		}
+
+		exp_up( stat: string ) {
+			console.log( 'exp_up', this.hero(), stat )
+			const chance = Math.ceil( Math.random() * 100 ) // 0 - 100
+			const min_chance = this.hero().exp[ stat ] <= 99 ? 100 - this.hero().exp[ stat ] : 1 // 1+
+			if( chance <= min_chance ) {
+				this.hero( { ...this.hero(), exp: { ...this.hero().exp, [ stat ]: this.hero().exp[ stat ] + 1 } } )
+				this.add_log( `🌟${ this.hero().name } повысил ${ stat } с шансом ${ chance }(${ min_chance })` )
+			}
+			// this.add_log( `test ${ this.hero().name } повысил ${ stat } с шансом ${ chance }(${ min_chance }) ${JSON.stringify( this.hero() )}` )
 		}
 
 		@$mol_action
 		enemy_attack() {
-			this.enemy( { ...this.enemy(), hp: this.enemy().hp - this.calc_dmg(this.hero())} )
+			this.enemy( { ...this.enemy(), hp: this.enemy().hp - this.calc_dmg( this.hero() ) } )
 		}
 
 		logic() {
-			if (this.enemy().hp <= 0) {
+			if( this.enemy().hp <= 0 ) {
 				this.next_enemy()
+				this.add_log( '*Враг умер*' )
 			}
-			if (this.hero().hp <= 0) {
+			if( this.hero().hp <= 0 ) {
 				this.restart()
+				this.next_enemy()
+				this.add_log( '**Герой умер. Рестарт**' )
 			}
 		}
 
@@ -90,7 +106,7 @@ namespace $.$$ {
 		}
 
 		next_enemy() {
-			return this.enemy($mol_array_lottery(this.enemies()))
+			return this.enemy( $mol_array_lottery( this.enemies() ) )
 		}
 
 		enemy_info(): string {
@@ -98,12 +114,26 @@ namespace $.$$ {
 		}
 
 		common_info( unit?: any ): string {
-			return `${ unit.icon }${ unit.name }\n 🌟${JSON.stringify(unit.exp) ?? '-'}\n❤️${ unit.hp } ⚔️${ unit.dmg }(${this.calc_dmg(unit)}) 👟${ unit.speed }`
+			return `${ unit.icon }${ unit.name }\n 🌟${ JSON.stringify( unit.exp ) ?? '-' }\n❤️${ unit.hp } ⚔️${ unit.dmg }(${ this.calc_dmg( unit ) }) 👟${ unit.speed }`
 		}
 
 		leave_and_heal( next?: any ) {
 			this.hero( { ...this.hero(), hp: 10 } )
 			this.next_enemy()
+		}
+
+		@$mol_mem
+		logs( next?: string[] ): string[] {
+			return next ?? []
+		}
+
+		@$mol_action
+		add_log( next?: string ) {
+			next && this.logs( [ ...this.logs(), next ] )
+		}
+
+		logs_info(): string {
+			return 'История:\n- ' + this.logs().reverse().join( '\n- ' )
 		}
 	}
 }
