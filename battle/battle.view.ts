@@ -1,8 +1,8 @@
 namespace $.$$ {
 	export class $tale_battle extends $.$tale_battle {
 
-		@$mol_mem_key
-		hero( id: any, next?: any ) {
+		@$mol_mem
+		hero( next?: any ) {
 			console.log( 'hero', next )
 			// if( next === undefined ) {
 			// 	return {
@@ -36,16 +36,16 @@ namespace $.$$ {
 		@$mol_action
 		hero_attack() {
 			console.log( 'hero_attack' )
-			this.hero( { ...this.hero(1), hp: this.hero(1).hp -= this.enemy().dmg } )
+			this.hero( { ...this.hero(), hp: this.hero().hp -= this.enemy().dmg } )
 
-			console.log( 'hero_attack', this.hero(1) )
+			console.log( 'hero_attack', this.hero() )
 		}
 
 		hero_info(): string {
-			console.log( 'hero info', this.hero(1) )
+			console.log( 'hero info', this.hero() )
 			// return this.common_info( this.hero() )
 			// return JSON.stringify( this.hero() )
-			return this.hero(1).hp + this.common_info( this.hero(1) )
+			return this.hero().hp + this.common_info( this.hero() )
 		}
 
 		enemy_info(): string {
