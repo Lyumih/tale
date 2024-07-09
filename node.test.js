@@ -9624,7 +9624,7 @@ var $;
     var $$;
     (function ($$) {
         class $tale_battle extends $.$tale_battle {
-            hero(id, next) {
+            hero(next) {
                 console.log('hero', next);
                 return next ?? {
                     icon: '🧙🏼‍♂️',
@@ -9645,12 +9645,12 @@ var $;
             }
             hero_attack() {
                 console.log('hero_attack');
-                this.hero({ ...this.hero(1), hp: this.hero(1).hp -= this.enemy().dmg });
-                console.log('hero_attack', this.hero(1));
+                this.hero({ ...this.hero(), hp: this.hero().hp -= this.enemy().dmg });
+                console.log('hero_attack', this.hero());
             }
             hero_info() {
-                console.log('hero info', this.hero(1));
-                return this.hero(1).hp + this.common_info(this.hero(1));
+                console.log('hero info', this.hero());
+                return this.hero().hp + this.common_info(this.hero());
             }
             enemy_info() {
                 return this.common_info(this.enemy());
@@ -9661,7 +9661,7 @@ var $;
             }
         }
         __decorate([
-            $mol_mem_key
+            $mol_mem
         ], $tale_battle.prototype, "hero", null);
         __decorate([
             $mol_mem
