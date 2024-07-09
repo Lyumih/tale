@@ -9148,6 +9148,14 @@ var $;
 			]);
 			return obj;
 		}
+		logs_info(){
+			return "";
+		}
+		Log_panel(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ((this?.logs_info()));
+			return obj;
+		}
 		title(){
 			return "Битва";
 		}
@@ -9156,7 +9164,8 @@ var $;
 				(this?.Field_card()), 
 				(this?.Hero_card()), 
 				(this?.Enemy_card()), 
-				(this?.Actions_panel())
+				(this?.Actions_panel()), 
+				(this?.Log_panel())
 			];
 		}
 	};
@@ -9173,6 +9182,7 @@ var $;
 	($mol_mem(($.$tale_battle.prototype), "leave_and_heal"));
 	($mol_mem(($.$tale_battle.prototype), "Exite_battle"));
 	($mol_mem(($.$tale_battle.prototype), "Actions_panel"));
+	($mol_mem(($.$tale_battle.prototype), "Log_panel"));
 
 
 ;
@@ -9222,7 +9232,7 @@ var $;
                         icon: '🐲',
                         name: 'Дракон',
                         hp: 100,
-                        dmg: 9,
+                        dmg: 4,
                         speed: 2,
                     },
                 ];
@@ -9237,6 +9247,7 @@ var $;
                     speed: 3,
                     exp: {
                         attack: 0,
+                        health: 0,
                     },
                 };
             }
@@ -9245,7 +9256,8 @@ var $;
             }
             hero_attack() {
                 this.enemy_attack();
-                this.hero({ ...this.hero(), hp: this.hero().hp - this.enemy().dmg, exp: { ...this.hero().exp, attack: this.hero().exp.attack + 1 } });
+                this.hero({ ...this.hero(), hp: this.hero().hp - this.enemy().dmg });
+                this.exp_up('attack');
                 console.log('hero_attack', this.hero());
                 this.logic();
             }
@@ -9253,15 +9265,27 @@ var $;
                 console.log('calc_dmg', unit);
                 return unit.dmg + (unit.exp?.attack || 0);
             }
+            exp_up(stat) {
+                console.log('exp_up', this.hero(), stat);
+                const chance = Math.ceil(Math.random() * 100);
+                const min_chance = this.hero().exp[stat] <= 99 ? 100 - this.hero().exp[stat] : 1;
+                if (chance <= min_chance) {
+                    this.hero({ ...this.hero(), exp: { ...this.hero().exp, [stat]: this.hero().exp[stat] + 1 } });
+                    this.add_log(`🌟${this.hero().name} повысил ${stat} с шансом ${chance}(${min_chance})`);
+                }
+            }
             enemy_attack() {
                 this.enemy({ ...this.enemy(), hp: this.enemy().hp - this.calc_dmg(this.hero()) });
             }
             logic() {
                 if (this.enemy().hp <= 0) {
                     this.next_enemy();
+                    this.add_log('*Враг умер*');
                 }
                 if (this.hero().hp <= 0) {
                     this.restart();
+                    this.next_enemy();
+                    this.add_log('**Герой умер. Рестарт**');
                 }
             }
             restart() {
@@ -9283,6 +9307,15 @@ var $;
                 this.hero({ ...this.hero(), hp: 10 });
                 this.next_enemy();
             }
+            logs(next) {
+                return next ?? [];
+            }
+            add_log(next) {
+                next && this.logs([...this.logs(), next]);
+            }
+            logs_info() {
+                return 'История:\n- ' + this.logs().reverse().join('\n- ');
+            }
         }
         __decorate([
             $mol_mem
@@ -9296,6 +9329,12 @@ var $;
         __decorate([
             $mol_action
         ], $tale_battle.prototype, "enemy_attack", null);
+        __decorate([
+            $mol_mem
+        ], $tale_battle.prototype, "logs", null);
+        __decorate([
+            $mol_action
+        ], $tale_battle.prototype, "add_log", null);
         $$.$tale_battle = $tale_battle;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));

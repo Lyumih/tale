@@ -705,6 +705,7 @@ $tale_battle $mol_page
 			<= Exite_battle $mol_button_major
 				title \Сбежать и полечиться
 				click? <=> leave_and_heal? null
+		<= Log_panel $mol_text text <= logs_info \
 
 $mol_text_list $mol_text
 	auto_scroll null
