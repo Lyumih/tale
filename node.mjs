@@ -9595,13 +9595,27 @@ var $;
 		}
 		Toggle_battle(){
 			const obj = new this.$.$mol_button_major();
-			(obj.title) = () => ("Поиск врага \\Сбежать");
+			(obj.title) = () => ("Поиск врага");
 			(obj.click) = (next) => ((this?.next_enemy(next)));
+			return obj;
+		}
+		leave_and_heal(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Exite_battle(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Сбежать и полечиться");
+			(obj.click) = (next) => ((this?.leave_and_heal(next)));
 			return obj;
 		}
 		Actions_panel(){
 			const obj = new this.$.$mol_row();
-			(obj.sub) = () => ([(this?.Attack()), (this?.Toggle_battle())]);
+			(obj.sub) = () => ([
+				(this?.Attack()), 
+				(this?.Toggle_battle()), 
+				(this?.Exite_battle())
+			]);
 			return obj;
 		}
 		title(){
@@ -9626,6 +9640,8 @@ var $;
 	($mol_mem(($.$tale_battle.prototype), "Attack"));
 	($mol_mem(($.$tale_battle.prototype), "next_enemy"));
 	($mol_mem(($.$tale_battle.prototype), "Toggle_battle"));
+	($mol_mem(($.$tale_battle.prototype), "leave_and_heal"));
+	($mol_mem(($.$tale_battle.prototype), "Exite_battle"));
 	($mol_mem(($.$tale_battle.prototype), "Actions_panel"));
 
 
@@ -9682,13 +9698,16 @@ var $;
                     hp: 10,
                     dmg: 2,
                     speed: 3,
+                    exp: {
+                        attack: 0,
+                    },
                 };
             }
             enemy(next) {
                 return next ?? this.enemies()[0];
             }
             hero_attack() {
-                this.hero({ ...this.hero(), hp: this.hero().hp - this.enemy().dmg });
+                this.hero({ ...this.hero(), hp: this.hero().hp - this.enemy().dmg, exp: { ...this.hero().exp, attack: this.hero().exp.attack + 1 } });
                 this.turn_enemy();
                 console.log('hero_attack', this.hero());
                 this.logic();
@@ -9700,6 +9719,12 @@ var $;
                 if (this.enemy().hp <= 0) {
                     this.next_enemy();
                 }
+                if (this.hero().hp <= 0) {
+                    this.restart();
+                }
+            }
+            restart() {
+                this.hero(null);
             }
             enemy_attack() {
                 this.enemy({ ...this.enemy(), hp: this.enemy().hp - this.hero().dmg });
@@ -9718,7 +9743,11 @@ var $;
             }
             common_info(unit) {
                 console.log('common info');
-                return `${unit.icon}${unit.name}\n ❤️${unit.hp} ⚔️${unit.dmg} 👟${unit.speed}`;
+                return `${unit.icon}${unit.name}\n 🌟${JSON.stringify(unit.exp)}\n❤️${unit.hp} ⚔️${unit.dmg} 👟${unit.speed}`;
+            }
+            leave_and_heal(next) {
+                this.hero({ ...this.hero(), hp: 10 });
+                this.next_enemy();
             }
         }
         __decorate([
