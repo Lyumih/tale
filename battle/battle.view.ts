@@ -45,7 +45,7 @@ namespace $.$$ {
 				speed: 3,
 				exp: {
 					attack: 0,
-					health: 0,
+					// health: 0,
 				},
 			}
 		}
@@ -60,6 +60,7 @@ namespace $.$$ {
 			this.enemy_attack()
 			this.hero( { ...this.hero(), hp: this.hero().hp - this.enemy().dmg } )
 			this.exp_up( 'attack' )
+			// this.exp_up( 'health' )
 			console.log( 'hero_attack', this.hero() )
 			this.logic()
 		}
@@ -88,12 +89,13 @@ namespace $.$$ {
 		logic() {
 			if( this.enemy().hp <= 0 ) {
 				this.next_enemy()
-				this.add_log( '*Враг умер*' )
+				this.add_log( `*🔎Враг умер*` )
 			}
 			if( this.hero().hp <= 0 ) {
 				this.restart()
 				this.next_enemy()
-				this.add_log( '**Герой умер. Рестарт**' )
+				this.logs( [] )
+				this.add_log( '**💀Герой умер. Перерождение**' )
 			}
 		}
 
@@ -106,6 +108,7 @@ namespace $.$$ {
 		}
 
 		next_enemy() {
+			// this.add_log('🔎Найден новый враг')
 			return this.enemy( $mol_array_lottery( this.enemies() ) )
 		}
 
@@ -120,6 +123,7 @@ namespace $.$$ {
 		leave_and_heal( next?: any ) {
 			this.hero( { ...this.hero(), hp: 10 } )
 			this.next_enemy()
+			this.add_log( '💖 Вы отдохнули у костра' )
 		}
 
 		@$mol_mem
@@ -129,11 +133,11 @@ namespace $.$$ {
 
 		@$mol_action
 		add_log( next?: string ) {
-			next && this.logs( [ ...this.logs(), next ] )
+			next && this.logs( [ next, ...this.logs() ] )
 		}
 
 		logs_info(): string {
-			return 'История:\n- ' + this.logs().reverse().join( '\n- ' )
+			return 'История:\n- ' + this.logs().join( '\n- ' )
 		}
 	}
 }
