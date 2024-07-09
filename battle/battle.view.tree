@@ -16,3 +16,4 @@ $tale_battle $mol_page
 				click? <=> hero_attack? null
 			<= Toggle_battle $mol_button_major
 				title \Поиск врага \Сбежать
+				click? <=> next_enemy? null
