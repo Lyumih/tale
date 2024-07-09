@@ -36,6 +36,9 @@ namespace $.$$ {
 				hp: 10,
 				dmg: 2,
 				speed: 3,
+				exp: {
+					attack: 0,
+				},
 			}
 		}
 
@@ -46,7 +49,7 @@ namespace $.$$ {
 
 		@$mol_action
 		hero_attack() {
-			this.hero( { ...this.hero(), hp: this.hero().hp - this.enemy().dmg } )
+			this.hero( { ...this.hero(), hp: this.hero().hp - this.enemy().dmg, exp: { ...this.hero().exp, attack: this.hero().exp.attack + 1 } } )
 			this.turn_enemy()
 			console.log( 'hero_attack', this.hero() )
 			this.logic()
@@ -60,6 +63,13 @@ namespace $.$$ {
 			if (this.enemy().hp <= 0) {
 				this.next_enemy()
 			}
+			if (this.hero().hp <= 0) {
+				this.restart()
+			}
+		}
+
+		restart() {
+			this.hero( null )
 		}
 
 		@$mol_action
@@ -84,7 +94,12 @@ namespace $.$$ {
 
 		common_info( unit?: any ): string {
 			console.log( 'common info' )
-			return `${ unit.icon }${ unit.name }\n ❤️${ unit.hp } ⚔️${ unit.dmg } 👟${ unit.speed }`
+			return `${ unit.icon }${ unit.name }\n 🌟${JSON.stringify(unit.exp)}\n❤️${ unit.hp } ⚔️${ unit.dmg } 👟${ unit.speed }`
+		}
+
+		leave_and_heal( next?: any ) {
+			this.hero( { ...this.hero(), hp: 10 } )
+			this.next_enemy()
 		}
 	}
 }

@@ -15,5 +15,8 @@ $tale_battle $mol_page
 				title \Атака
 				click? <=> hero_attack? null
 			<= Toggle_battle $mol_button_major
-				title \Поиск врага \Сбежать
+				title \Поиск врага
 				click? <=> next_enemy? null
+			<= Exite_battle $mol_button_major
+				title \Сбежать и полечиться
+				click? <=> leave_and_heal? null
