@@ -9072,15 +9072,15 @@ var $;
 "use strict";
 
 ;
-	($.$tale_battle) = class $tale_battle extends ($.$mol_page) {
-		Field_info(){
+	($.$tale_battle) = class $tale_battle extends ($.$mol_book2) {
+		Game_info(){
 			const obj = new this.$.$mol_text();
-			(obj.text) = () => ("Скорость\nВраг 2, Герой 5");
+			(obj.text) = () => ("#### Сможете победить дракона?");
 			return obj;
 		}
-		Field_card(){
+		Game_card(){
 			const obj = new this.$.$tale_ui_card();
-			(obj.sub) = () => ([(this?.Field_info())]);
+			(obj.sub) = () => ([(this?.Game_info())]);
 			return obj;
 		}
 		hero_info(){
@@ -9148,6 +9148,17 @@ var $;
 			]);
 			return obj;
 		}
+		Battle(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Битва");
+			(obj.body) = () => ([
+				(this?.Game_card()), 
+				(this?.Hero_card()), 
+				(this?.Enemy_card()), 
+				(this?.Actions_panel())
+			]);
+			return obj;
+		}
 		logs_info(){
 			return "";
 		}
@@ -9156,21 +9167,18 @@ var $;
 			(obj.text) = () => ((this?.logs_info()));
 			return obj;
 		}
-		title(){
-			return "Битва";
+		Logs(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Логи");
+			(obj.body) = () => ([(this?.Log_panel())]);
+			return obj;
 		}
-		body(){
-			return [
-				(this?.Field_card()), 
-				(this?.Hero_card()), 
-				(this?.Enemy_card()), 
-				(this?.Actions_panel()), 
-				(this?.Log_panel())
-			];
+		pages(){
+			return [(this?.Battle()), (this?.Logs())];
 		}
 	};
-	($mol_mem(($.$tale_battle.prototype), "Field_info"));
-	($mol_mem(($.$tale_battle.prototype), "Field_card"));
+	($mol_mem(($.$tale_battle.prototype), "Game_info"));
+	($mol_mem(($.$tale_battle.prototype), "Game_card"));
 	($mol_mem(($.$tale_battle.prototype), "Hero_info"));
 	($mol_mem(($.$tale_battle.prototype), "Hero_card"));
 	($mol_mem(($.$tale_battle.prototype), "Enemy_info"));
@@ -9182,7 +9190,9 @@ var $;
 	($mol_mem(($.$tale_battle.prototype), "leave_and_heal"));
 	($mol_mem(($.$tale_battle.prototype), "Exite_battle"));
 	($mol_mem(($.$tale_battle.prototype), "Actions_panel"));
+	($mol_mem(($.$tale_battle.prototype), "Battle"));
 	($mol_mem(($.$tale_battle.prototype), "Log_panel"));
+	($mol_mem(($.$tale_battle.prototype), "Logs"));
 
 
 ;
@@ -9247,7 +9257,6 @@ var $;
                     speed: 3,
                     exp: {
                         attack: 0,
-                        health: 0,
                     },
                 };
             }
@@ -9280,12 +9289,13 @@ var $;
             logic() {
                 if (this.enemy().hp <= 0) {
                     this.next_enemy();
-                    this.add_log('*Враг умер*');
+                    this.add_log(`*🔎Враг умер*`);
                 }
                 if (this.hero().hp <= 0) {
                     this.restart();
                     this.next_enemy();
-                    this.add_log('**Герой умер. Рестарт**');
+                    this.logs([]);
+                    this.add_log('**💀Герой умер. Перерождение**');
                 }
             }
             restart() {
@@ -9306,15 +9316,16 @@ var $;
             leave_and_heal(next) {
                 this.hero({ ...this.hero(), hp: 10 });
                 this.next_enemy();
+                this.add_log('💖 Вы отдохнули у костра');
             }
             logs(next) {
                 return next ?? [];
             }
             add_log(next) {
-                next && this.logs([...this.logs(), next]);
+                next && this.logs([next, ...this.logs()]);
             }
             logs_info() {
-                return 'История:\n- ' + this.logs().reverse().join('\n- ');
+                return 'История:\n- ' + this.logs().join('\n- ');
             }
         }
         __decorate([
