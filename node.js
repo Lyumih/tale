@@ -9553,6 +9553,19 @@ var $;
 			(obj.sub) = () => ([(this?.Game_info())]);
 			return obj;
 		}
+		speed_info(){
+			return "Скорость\nВраг 2, Герой 5";
+		}
+		Field_info(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ((this?.speed_info()));
+			return obj;
+		}
+		Field_card(){
+			const obj = new this.$.$tale_ui_card();
+			(obj.sub) = () => ([(this?.Field_info())]);
+			return obj;
+		}
 		hero_info(){
 			return "";
 		}
@@ -9623,6 +9636,7 @@ var $;
 			(obj.title) = () => ("Битва");
 			(obj.body) = () => ([
 				(this?.Game_card()), 
+				(this?.Field_card()), 
 				(this?.Hero_card()), 
 				(this?.Enemy_card()), 
 				(this?.Actions_panel())
@@ -9649,6 +9663,8 @@ var $;
 	};
 	($mol_mem(($.$tale_battle.prototype), "Game_info"));
 	($mol_mem(($.$tale_battle.prototype), "Game_card"));
+	($mol_mem(($.$tale_battle.prototype), "Field_info"));
+	($mol_mem(($.$tale_battle.prototype), "Field_card"));
 	($mol_mem(($.$tale_battle.prototype), "Hero_info"));
 	($mol_mem(($.$tale_battle.prototype), "Hero_card"));
 	($mol_mem(($.$tale_battle.prototype), "Enemy_info"));
@@ -9787,6 +9803,9 @@ var $;
                 this.hero({ ...this.hero(), hp: 10 });
                 this.next_enemy();
                 this.add_log('💖 Вы отдохнули у костра');
+            }
+            speed_info() {
+                return `⏳ ${this.hero().icon} ${this.hero().speed} - ${this.enemy().icon} ${this.enemy().speed}`;
             }
             logs(next) {
                 return next ?? [];
