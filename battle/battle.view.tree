@@ -7,8 +7,8 @@ $tale_battle $mol_book2
 				<= Game_card $tale_ui_card sub /
 					<= Game_info $mol_text text \
 						\#### Сможете победить дракона?
-				- <= Field_card $tale_ui_card sub /
-					<= Field_info $mol_text text \
+				<= Field_card $tale_ui_card sub /
+					<= Field_info $mol_text text <= speed_info \
 						\Скорость
 						\Враг 2, Герой 5
 				<= Hero_card $tale_ui_card sub /

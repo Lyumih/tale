@@ -126,6 +126,10 @@ namespace $.$$ {
 			this.add_log( '💖 Вы отдохнули у костра' )
 		}
 
+		speed_info(): string {
+			return `⏳ ${ this.hero().icon } ${ this.hero().speed } - ${ this.enemy().icon } ${ this.enemy().speed }`
+		}
+
 		@$mol_mem
 		logs( next?: string[] ): string[] {
 			return next ?? []
