@@ -1,12 +1,12 @@
 $tale_app $mol_book2_catalog
 	menu_title \Hero Tale
 	param \p
-	- realm $hyoo_crus_realm
+	realm $hyoo_crus_realm
 	plugins / <= Theme $mol_theme_auto theme \$mol_theme_light
 	menu_foot /
 		<= Source $mol_link_source uri \https://github.com/Lyumih/tale
 		<= User_id $mol_text text <= user_id \
-		- <= Crus_status $hyoo_crus_status realm <= realm
+		<= Crus_status $hyoo_crus_status realm <= realm
 	spreads *
 		battle <= Battle $tale_battle
 			- realm <= realm
