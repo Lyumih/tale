@@ -203,6 +203,7 @@
     "$mol_embed_youtube",
     "$mol_icon_youtube",
     "$mol_frame",
+    "$mol_expander",
     "$tale_battle",
     "$tale_ui_card",
     "$tale_ui",
