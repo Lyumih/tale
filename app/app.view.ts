@@ -3,10 +3,11 @@ namespace $.$$ {
 	export class $tale_app extends $.$tale_app {
 		@$mol_mem
 		user() {
-			return this.realm().home().hall_by( $go_user_dao, $hyoo_crus_rank_public )
+			return this.$.$hyoo_crus_realm.home().hall_by( $tale_dao_user, { '': $hyoo_crus_rank.get } )
 		}
 
 		user_id() {
+			// console.log('hero', this.user()?.Hero())
 			return this.user()?.ref().description ?? ''
 		}
 	}

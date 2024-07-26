@@ -1,0 +1,9 @@
+$tale_app_hero $mol_book2
+	pages /
+		<= Hero $mol_page
+			title \Герой
+			body /
+				<= Hero_name_labeler $mol_labeler
+					title \Имя героя
+					content / <= Hero_name $mol_string
+						value? <=> hero_name? \
