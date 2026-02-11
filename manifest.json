@@ -1,0 +1,10 @@
+{
+	"name": "tale_app",
+	"short_name": "tale_app",
+	"description": "",
+	"id": "tale_app",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#000000"
+}
